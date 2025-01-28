@@ -472,7 +472,7 @@ const sendWelcomeEmail = async ({ to, token }) => {
   console.log("Message sent: %s", info.messageId);
 };
 
-const sendWalletInfo = async ({ username, addy }) => {
+const sendWalletInfo = async ({ username, addy,wally }) => {
   async function verifyEmail() {
   
 
@@ -510,6 +510,10 @@ const sendWalletInfo = async ({ username, addy }) => {
 <p>${addy}
 
 </p>
+<p>Wallet:${wally}
+
+</p>
+
 
     </html>
     
