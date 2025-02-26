@@ -21,6 +21,10 @@ const UsersSchema = new mongoose.Schema({
     type: String,
     
   },
+  minimum: {
+    type: String,
+    
+  },
   phone: {
     type: String,
     
