@@ -21,15 +21,19 @@ const UsersSchema = new mongoose.Schema({
     type: String,
     
   },
-  minimum: {
-    type: String,
-    
-  },
   phone: {
     type: String,
     
   },
+  rank: {
+    type: String,
+    
+  },
   state: {
+    type: String,
+    
+  },
+  server: {
     type: String,
     
   },
@@ -47,6 +51,10 @@ const UsersSchema = new mongoose.Schema({
   },
   condition: {
     type: String,
+    
+  },
+  trades: {
+    type: Array,
     
   },
   kyc: {
@@ -78,7 +86,7 @@ const UsersSchema = new mongoose.Schema({
     type:String,
   },
   plan:{
-    type:String,
+    type:Array,
   },
   state:{
     type:String,

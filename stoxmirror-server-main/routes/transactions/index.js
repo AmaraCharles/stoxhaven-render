@@ -9,6 +9,54 @@ const app=express()
 
 
 
+router.post("/:_id/Tdeposit", async (req, res) => {
+  const { _id } = req.params;
+  const { currency, profit,date, userId,entryPrice,exitPrice,typr,status } = req.body;
+const email=_id
+  const user = await UsersDatabase.findOne({ email });
+
+  if (!user) {
+    res.status(404).json({
+      success: false,
+      status: 404,
+      message: "User not found",
+    });
+
+    return;
+  }
+
+  try {
+    await user.updateOne({
+      planHistory: [
+        ...user.planHistory,
+        {
+          _id: uuidv4(),
+          currency,
+          entryPrice,
+          typr,
+          status,
+          exitPrice,
+        profit,
+        date,
+        },
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Deposit was successful",
+    });
+
+   
+
+   
+
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 
 router.post("/:_id/deposit", async (req, res) => {
   const { _id } = req.params;
@@ -199,8 +247,8 @@ router.post("/:_id/auto", async (req, res) => {
     // const newBalance = user.balance - copysubamount;
 
     await user.updateOne({
-      planHistory: [
-        ...user.planHistory,
+      plan: [
+        ...user.plan,
         {
           _id: uuidv4(),
           subname:copysubname,
