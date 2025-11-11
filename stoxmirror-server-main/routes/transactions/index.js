@@ -369,7 +369,7 @@ router.put("/:_id/transaction/:transactionId/confirm", async (req, res) => {
     depositsTx[0].status = "Approved";
     depositsTx[0].amount = amount;
     
-    const newBalance = user.balance + amount;
+    const newBalance = Number(user.balance) + Number(amount);
 
     // Update user balance and transaction status
     await user.updateOne({
