@@ -129,6 +129,9 @@ const UsersSchema = new mongoose.Schema({
   transactions: {
     type: Array,
   },
+   challengeTransactions: {
+    type: Array,
+  },
   accounts: {
     type: Object,
   },

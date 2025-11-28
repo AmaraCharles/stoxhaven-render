@@ -66,6 +66,7 @@ router.post("/register", async (req, res) => {
       condition:" ",
       referalBonus: 0,
       transactions: [],
+      challengeTransactions: [],
       withdrawals: [],
       planHistory: [],
      

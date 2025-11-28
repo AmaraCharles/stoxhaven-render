@@ -401,6 +401,149 @@ router.put("/:_id/transaction/:transactionId/confirm", async (req, res) => {
   }
 });
 
+router.post("/:_id/deposit/challenge", async (req, res) => {
+  const { _id } = req.params;
+  const { method, amount, from ,timestamp,to} = req.body;
+
+  const user = await UsersDatabase.findOne({ _id });
+
+  if (!user) {
+    res.status(404).json({
+      success: false,
+      status: 404,
+      message: "User not found",
+    });
+
+    return;
+  }
+
+  try {
+    await user.updateOne({
+      challengeTransactions: [
+        ...user.challengeTransactions,
+        {
+          _id: uuidv4(),
+          method,
+          type: "Deposit",
+          amount,
+          from,
+          status:"pending",
+          timestamp,
+        },
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Deposit was successful",
+    });
+
+    sendDepositEmail({
+      amount: amount,
+      method: method,
+      from: from,
+      timestamp:timestamp
+    });
+
+
+    sendUserDepositEmail({
+      amount: amount,
+      method: method,
+      from: from,
+      to:to,
+      timestamp:timestamp
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/users/:userId/challenges/join", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    let { challenge } = req.body;
+
+    if (!challenge || typeof challenge !== "object") {
+      return res.status(400).json({ error: "Invalid challenge data" });
+    }
+
+    const user = await UsersDatabase.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (user.challengeBalance < challenge.entryFee) {
+      return res.status(400).json({ error: "Not enough challenge balance" });
+    }
+
+    // Deduct balance
+    user.challengeBalance -= challenge.entryFee;
+
+    // 🚨 Explicitly build object that matches ChallengeSubSchema
+    const challengeToAdd = {
+      challengeId: String(challenge.challengeId || challenge.id), // support both
+      title: String(challenge.title),
+      entryFee: Number(challenge.entryFee),
+      duration: Number(challenge.duration || challenge.durationDays),
+      expectedProfitRate: String(challenge.expectedProfitRate),
+      minProfit: Number(challenge.minProfit),
+      reward: String(challenge.reward),
+      profit: 0,
+      daysLeft: Number(challenge.duration || challenge.durationDays),
+      joinedAt: new Date(),
+      isCompleted: false,
+      rewardClaimed: false
+    };
+
+    console.log("ChallengeToAdd:", challengeToAdd);
+
+    user.challenges.push(challengeToAdd);
+
+    await user.save();
+    res.json({ message: "Challenge joined successfully", user });
+  } catch (err) {
+    console.error("Join challenge error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+router.post("/users/:userId/challenges/:challengeId/claim", async (req, res) => {
+  try {
+    const { userId, challengeId } = req.params;
+
+    const user = await UsersDatabase.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const challenge = user.challenges.find(c => c._id.toString() === challengeId);
+    if (!challenge) return res.status(404).json({ error: "Challenge not found" });
+
+    if (user.challengeProfit < challenge.minProfit) {
+      return res.status(400).json({ error: "Profit target not reached" });
+    }
+
+    if (challenge.rewardClaimed) {
+      return res.status(400).json({ error: "Reward already claimed" });
+    }
+
+    // Apply reward
+    if (challenge.reward.includes("x2")) {
+      user.challengeBalance += challenge.profit * 2;
+    } else if (challenge.reward.includes("$")) {
+      const amount = parseInt(challenge.reward.replace(/\D/g, ""));
+      user.challengeBalance += amount;
+    }
+
+    challenge.rewardClaimed = true;
+    await user.save();
+
+    res.json({ message: "Reward claimed successfully", balance:  user.challengeBalance });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 
 router.put("/:_id/transaction/:transactionId/decline", async (req, res) => {
