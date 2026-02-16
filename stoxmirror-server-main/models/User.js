@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const ChallengeSchema = new mongoose.Schema({
+  challengeId: String,
+  title: String,
+  entryFee: Number,
+  duration: Number,
+  expectedProfitRate: String,
+  minProfit: Number,
+  reward: String,
+  profit: { type: Number, default: 0 },
+  daysLeft: Number,
+  joinedAt: { type: Date, default: Date.now },
+  isCompleted: { type: Boolean, default: false },
+  rewardClaimed: { type: Boolean, default: false }
+});
+
 const UsersSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -132,6 +147,8 @@ const UsersSchema = new mongoose.Schema({
    challengeTransactions: {
     type: Array,
   },
+   challengeWithdrawals: { type: Array, default: [] },
+    challenges: { type: [ChallengeSchema], default: [] },
   accounts: {
     type: Object,
   },
