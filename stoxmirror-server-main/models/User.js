@@ -144,6 +144,7 @@ const UsersSchema = new mongoose.Schema({
   transactions: {
     type: Array,
   },
+   challengeBalance: { type: Number, default: 0 },
    challengeTransactions: {
     type: Array,
   },
