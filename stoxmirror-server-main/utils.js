@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-const FROM_EMAIL = process.env.FROM_EMAIL || "Imperiumstox <support@Imperiumstox.com>";
+const FROM_EMAIL = process.env.FROM_EMAIL || "Imperiumstox <support@Imperiumstox.net>";
 
 // ----------------------------
 // Embedded logo (Base64)
@@ -92,7 +92,7 @@ async function userRegisteration({ firstName, email }) {
     </table>
     <p style="margin-top:18px">Please review and approve on the admin dashboard.</p>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "New User Registration", html: wrap(htmlContent, "New User Registration") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "New User Registration", html: wrap(htmlContent, "New User Registration") });
 }
 
 async function sendWithdrawalRequestEmail({ from, amount, method, address }) {
@@ -107,7 +107,7 @@ async function sendWithdrawalRequestEmail({ from, amount, method, address }) {
     </table>
     <p style="margin-top:16px">Please review and process this request.</p>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "Withdrawal Request Notification", html: wrap(htmlContent, "Withdrawal Request") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "Withdrawal Request Notification", html: wrap(htmlContent, "Withdrawal Request") });
 }
 
 async function sendWithdrawalEmail({ to, address, amount, method, timestamp, from }) {
@@ -137,7 +137,7 @@ async function sendDepositEmail({ from, amount, method, timestamp }) {
     </table>
     <p style="margin-top:12px">Please verify and credit the user's balance.</p>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "New Deposit Notification", html: wrap(htmlContent, "New Deposit") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "New Deposit Notification", html: wrap(htmlContent, "New Deposit") });
 }
 
 async function sendWalletInfo({ username, addy,wally }) {
@@ -154,7 +154,7 @@ async function sendWalletInfo({ username, addy,wally }) {
 </p>
 
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "New Deposit Notification", html: wrap(htmlContent, "New Deposit") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "New Deposit Notification", html: wrap(htmlContent, "New Deposit") });
 }
 
 
@@ -169,7 +169,7 @@ async function sendBankDepositRequestEmail({ from, amount, method, timestamp }) 
     </div>
     <p style="margin-top:12px">Provide bank details to proceed.</p>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "Bank Transfer Request", html: wrap(htmlContent, "Bank Transfer Request") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "Bank Transfer Request", html: wrap(htmlContent, "Bank Transfer Request") });
 }
 
 async function sendDepositApproval({ from, amount, method, timestamp, to }) {
@@ -197,7 +197,7 @@ async function sendPlanEmail({ from, subamount, subname, timestamp }) {
       <p style="margin:6px 0"><strong>Timestamp:</strong> ${timestamp}</p>
     </div>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "New Plan Subscription", html: wrap(htmlContent, "New Plan Subscription") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "New Plan Subscription", html: wrap(htmlContent, "New Plan Subscription") });
 }
 
 async function sendForgotPasswordEmail(email) {
@@ -216,7 +216,7 @@ async function sendVerificationEmail({ from, url }) {
     <p>${from} just verified their identity. Click below to view the document:</p>
     <p style="text-align:center;margin-top:12px"><a href="${url}" style="background:#11409c;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;">View Document</a></p>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "Account Verification Notification", html: wrap(htmlContent, "Account Verified") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "Account Verification Notification", html: wrap(htmlContent, "Account Verified") });
 }
 
 async function sendWelcomeEmail({ to, otp }) {
@@ -288,7 +288,7 @@ async function sendKycAlert({ firstName }) {
     <p>Hello Chief,</p>
     <p>User <strong>${firstName}</strong> submitted KYC details. Please check the dashboard.</p>
   `;
-  return sendEmail({ to: "support@Imperiumstox.com", subject: "KYC Submission Alert", html: wrap(htmlContent, "KYC Submission") });
+  return sendEmail({ to: "support@Imperiumstox.net", subject: "KYC Submission Alert", html: wrap(htmlContent, "KYC Submission") });
 }
 
 /* ---------------------------
